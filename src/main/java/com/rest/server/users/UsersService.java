@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UsersService {
@@ -19,15 +18,30 @@ public class UsersService {
         return this.usersRepositories.save(user);
     }
 
-    public List<Users> getAllUsers(){
+    public List<Users> findAll(){
         return this.usersRepositories.findAll();
     }
 
-    public Users getOneById(Long id){
-        return this.usersRepositories.findById(id).orElseThrow(
-                () -> new NotFoundException("User with id: " + id + "not found")
-        );
+    public Users findOne(Long id){
+       Users user = this.usersRepositories.findById(id).orElseThrow(
+               () -> new NotFoundException("User whit id" + id + "not found")
+       );
 
+       return user;
+    }
+
+
+    public Users update(Long id, Users userUpdate){
+        Users user = this.findOne(id);
+
+        user.setName(userUpdate.getName());
+        return this.usersRepositories.save(user);
+    }
+
+
+    public void remove(Long id){
+        Users user = this.findOne(id);
+        this.usersRepositories.delete(user);
     }
 
 }
